@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graphite & Co - Precision Pencils</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: 'Inter', -apple-system, sans-serif; 
+    background: #0a0a0a; 
+    color: #fff; 
+    overflow-x: hidden;
+  }
+  canvas { position: fixed; top: 0; left: 0; z-index: 0; }
+  section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .content {
+    max-width: 900px;
+    text-align: center;
+  }
+  h1 { 
+    font-size: clamp(48px, 8vw, 120px); 
+    font-weight: 700; 
+    letter-spacing: -3px; 
+    margin-bottom: 20px;
+  }
+  p { 
+    font-size: clamp(18px, 3vw, 24px); 
+    opacity: 0.7; 
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .cta {
+    margin-top: 40px;
+    padding: 16px 40px;
+    background: #fff;
+    color: #0a0a0a;
+    border: none;
+    border-radius: 100px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  @media (max-width: 768px) {
+    section { padding: 40px 20px; }
+    h1 { letter-spacing: -2px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<section>
+  <div class="content">
+    <h1>Graphite & Co</h1>
+    <p>Engineered wood. Museum-grade graphite. Tools for ideas that last.</p>
+    <button class="cta">Shop Collection</button>
+  </div>
+</section>
+
+<section>
+  <div class="content">
+    <h1>Precision</h1>
+    <p>Each pencil milled to 0.01mm tolerance. Balanced weight, flawless point.</p>
+  </div>
+</section>
+
+<section>
+  <div class="content">
+    <h1>Craft</h1>
+    <p>Sustainable cedar, hand-finished, dipped in 8 layers of lacquer.</p>
+  </div>
+</section>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+    "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.4/+esm"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+// 3D Scene setup
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 100);
+camera.position.z = 5;
+
+const renderer = new THREE.WebGLRenderer({ 
+  canvas: document.getElementById('c'), 
+  antialias: true, 
+  alpha: true 
+});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+// Lighting
+const light = new THREE.DirectionalLight(0xffffff, 1.5);
+light.position.set(2, 5, 5);
+scene.add(light);
+scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+// Pencil model - procedural geometry
+const woodMat = new THREE.MeshStandardMaterial({ color: 0xd4a574, roughness: 0.4 });
+const graphiteMat = new THREE.MeshStandardMaterial({ color: 0x111, roughness: 0.1 });
+const ferruleMat = new THREE.MeshStandardMaterial({ color: 0xc0c0c0, metalness: 0.9, roughness: 0.2 });
+const eraserMat = new THREE.MeshStandardMaterial({ color: 0xff6b6b, roughness: 0.6 });
+
+const pencil = new THREE.Group();
+
+// Wood body
+const body = new THREE.CylinderGeometry(0.2, 0.2, 4, 32);
+const bodyMesh = new THREE.Mesh(body, woodMat);
+pencil.add(bodyMesh);
+
+// Tip
+const tip = new THREE.ConeGeometry(0.2, 0.4, 32);
+const tipMesh = new THREE.Mesh(tip, graphiteMat);
+tipMesh.position.y = 2.2;
+pencil.add(tipMesh);
+
+// Ferrule + eraser
+const ferrule = new THREE.CylinderGeometry(0.22, 0.22, 0.4, 32);
+const ferruleMesh = new THREE.Mesh(ferrule, ferruleMat);
+ferruleMesh.position.y = -2.2;
+pencil.add(ferruleMesh);
+
+const eraser = new THREE.CylinderGeometry(0.2, 0.2, 0.3, 32);
+const eraserMesh = new THREE.Mesh(eraser, eraserMat);
+eraserMesh.position.y = -2.55;
+pencil.add(eraserMesh);
+
+scene.add(pencil);
+
+// Controls - mobile friendly
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableZoom = false;
+controls.enablePan = false;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 1;
+
+// Scroll animations
+gsap.to(pencil.rotation, {
+  y: Math.PI * 4,
+  scrollTrigger: {
+    trigger: "section:nth-child(3)",
+    start: "top bottom",
+    end: "bottom top",
+    scrub: 1
+  }
+});
+
+gsap.to(camera.position, {
+  z: 3,
+  scrollTrigger: {
+    trigger: "section:nth-child(2)",
+    start: "top center",
+    scrub: 1
+  }
+});
+
+// Animate
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+// Resize
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>
