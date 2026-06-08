@@ -1,277 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title id="brand-title">Graphite & Co - Precision Instruments</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Canela:wght@300;400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #050505;
-    --text: #f5f5f5;
-    --text-dim: rgba(245, 245, 245, 0.7);
-    --gold: #d4af37;
-    --gold-dark: #b8941f;
-  }
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { 
-    width: 100%; height: 100%;
-    font-family: 'Inter', sans-serif; 
-    background: var(--bg); 
-    color: var(--text); 
-    overflow-x: hidden;
-    overscroll-behavior-y: none;
-  }
-  canvas { position: fixed; top: 0; left: 0; z-index: 0; touch-action: none; }
-  .fx-layer {
-    position: fixed; inset: 0;
-    background: radial-gradient(circle at 50% 35%, rgba(212, 175, 55, 0.12) 0%, transparent 65%),
-                radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.06) 0%, transparent 50%);
-    z-index: 1; pointer-events: none; mix-blend-mode: screen;
-  }
-  .noise {
-    position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  }
-  section {
-    min-height: 100svh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: clamp(60px, 10vh, 120px) 24px;
-    position: relative;
-    z-index: 3;
-  }
-  .content { 
-    max-width: 900px; 
-    text-align: center; 
-    opacity: 0;
-    transform: translateY(60px);
-  }
-  h1 { 
-    font-family: 'Canela', serif;
-    font-size: clamp(48px, 8.5vw, 160px); 
-    font-weight: 300; 
-    letter-spacing: -2.5px; 
-    line-height: 1.05;
-    margin-bottom: 28px;
-    color: var(--text);
-  }
-  .gold { color: var(--gold); }
-  .serif { font-family: 'Canela', serif; font-weight: 300; }
-  p { 
-    font-size: clamp(17px, 2.3vw, 23px); 
-    color: var(--text-dim); 
-    line-height: 1.8;
-    max-width: 620px;
-    margin: 0 auto;
-    font-weight: 300;
-    letter-spacing: 0.2px;
-  }
-  .cta {
-    margin-top: 52px;
-    padding: 20px 56px;
-    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
-    color: var(--bg);
-    border: none;
-    border-radius: 1px;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 8px 32px rgba(212, 175, 55, 0.25);
-  }
-  .cta:active { transform: scale(0.97); }
-  .progress {
-    position: fixed; top: 0; left: 0; height: 2px;
-    background: linear-gradient(90deg, var(--gold), var(--gold-dark));
-    z-index: 10; transform-origin: 0 50%;
-  }
-  @media (max-width: 768px) {
-    section { padding: 80px 20px; }
-    h1 { letter-spacing: -1.5px; }
-    .cta { padding: 18px 44px; }
-  }
-  /* Loading */
-  .loader {
-    position: fixed; inset: 0; background: var(--bg); z-index: 100;
-    display: flex; align-items: center; justify-content: center;
-    transition: opacity 0.8s;
-  }
-  .loader.hidden { opacity: 0; pointer-events: none; }
-  .loader-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--gold); margin: 0 4px;
-    animation: pulse 1.4s infinite ease-in-out both;
-  }
-  .loader-dot:nth-child(2) { animation-delay: 0.2s; }
-  .loader-dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes pulse { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury - Premium Experience</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">✨ LUXE</div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
 
-<div class="loader" id="loader">
-  <div class="loader-dot"></div>
-  <div class="loader-dot"></div>
-  <div class="loader-dot"></div>
-</div>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Premium Excellence</h1>
+            <p class="hero-subtitle">Experience the future of luxury design</p>
+            <button class="cta-button">Explore Now</button>
+        </div>
+        <div id="canvas-container" class="canvas-container"></div>
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
 
-<div class="progress" id="progress"></div>
-<canvas id="c"></canvas>
-<div class="fx-layer"></div>
-<div class="noise"></div>
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="section-title">
+            <h2>Our Services</h2>
+            <div class="title-line"></div>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🎨</div>
+                <h3>Design</h3>
+                <p>Bespoke design solutions tailored to perfection</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">⚡</div>
+                <h3>Performance</h3>
+                <p>Lightning-fast delivery with zero compromise</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔐</div>
+                <h3>Security</h3>
+                <p>Enterprise-grade security and privacy</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🌐</div>
+                <h3>Global</h3>
+                <p>Worldwide presence with local expertise</p>
+            </div>
+        </div>
+    </section>
 
-<section data-animate>
-  <div class="content">
-    <h1 id="brand-name">Graphite <span class="gold">&</span> Co</h1>
-    <p id="brand-tagline">Engineered wood. Museum-grade graphite. Instruments for ideas that outlast us.</p>
-    <button class="cta" id="cta-btn">View Collection</button>
-  </div>
-</section>
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio">
+        <div class="section-title">
+            <h2>Portfolio</h2>
+            <div class="title-line"></div>
+        </div>
+        
+        <div class="portfolio-grid">
+            <div class="portfolio-item" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="portfolio-overlay">
+                    <h3>Project Alpha</h3>
+                    <p>Digital Innovation</p>
+                </div>
+            </div>
+            <div class="portfolio-item" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="portfolio-overlay">
+                    <h3>Project Beta</h3>
+                    <p>Brand Experience</p>
+                </div>
+            </div>
+            <div class="portfolio-item" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="portfolio-overlay">
+                    <h3>Project Gamma</h3>
+                    <p>Web Solutions</p>
+                </div>
+            </div>
+            <div class="portfolio-item" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <div class="portfolio-overlay">
+                    <h3>Project Delta</h3>
+                    <p>Mobile Apps</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<section data-animate>
-  <div class="content">
-    <h1 class="serif">Precision</h1>
-    <p>Each instrument milled to 0.01mm tolerance. Balanced weight distribution. Flawless point retention.</p>
-  </div>
-</section>
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stat-item">
+            <div class="stat-number" data-target="500">0</div>
+            <div class="stat-label">+ Projects</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-target="98">0</div>
+            <div class="stat-label">% Satisfaction</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-target="50">0</div>
+            <div class="stat-label">+ Team Members</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" data-target="15">0</div>
+            <div class="stat-label">+ Years</div>
+        </div>
+    </section>
 
-<section data-animate>
-  <div class="content">
-    <h1 class="serif">Craft</h1>
-    <p>Sustainable cedar sourced from California. Hand-finished by artisans. Eight layers of Italian lacquer.</p>
-  </div>
-</section>
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="section-title">
+            <h2>Get In Touch</h2>
+            <div class="title-line"></div>
+        </div>
+        
+        <div class="contact-content">
+            <div class="contact-info">
+                <div class="info-item">
+                    <span class="info-icon">📍</span>
+                    <div>
+                        <h4>Location</h4>
+                        <p>Premium City, Country</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">📧</span>
+                    <div>
+                        <h4>Email</h4>
+                        <p>hello@luxe.com</p>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-icon">📱</span>
+                    <div>
+                        <h4>Phone</h4>
+                        <p>+1 (555) 123-4567</p>
+                    </div>
+                </div>
+            </div>
+            
+            <form class="contact-form">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <textarea placeholder="Your Message" rows="5" required></textarea>
+                <button type="submit" class="cta-button">Send Message</button>
+            </form>
+        </div>
+    </section>
 
-<section data-animate>
-  <div class="content">
-    <h1 class="serif">Legacy</h1>
-    <p>Tools designed to be passed down. Not replaced. Write your story with instruments that last generations.</p>
-  </div>
-</section>
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 LUXE Premium. All rights reserved.</p>
+        <div class="social-links">
+            <a href="#">Twitter</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Instagram</a>
+        </div>
+    </footer>
 
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
-    "gsap": "https://cdn.jsdelivr.net/npm/gsap@3.12.5/+esm",
-    "lenis": "https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/+esm"
-  }
-}
-</script>
-
-<script type="module">
-// CONFIG - EDIT THESE FOR YOUR BRAND
-const BRAND = {
-  name: "Graphite & Co",
-  tagline: "Engineered wood. Museum-grade graphite. Instruments for ideas that outlast us.",
-  ctaText: "View Collection",
-  goldColor: 0xd4af37,
-  bgColor: 0x050505,
-  woodColor: 0xe6c08a,
-  eraserColor: 0xf5f0e8
-};
-
-// Apply brand config
-document.getElementById('brand-title').textContent = BRAND.name + ' - Precision Instruments';
-document.getElementById('brand-name').innerHTML = BRAND.name.replace('&', '<span class="gold">&</span>');
-document.getElementById('brand-tagline').textContent = BRAND.tagline;
-document.getElementById('cta-btn').textContent = BRAND.ctaText;
-
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Lenis from 'lenis';
-
-gsap.registerPlugin(ScrollTrigger);
-
-// Lenis smooth scroll
-const lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
-lenis.on('scroll', ScrollTrigger.update);
-gsap.ticker.add(time => lenis.raf(time * 1000));
-gsap.ticker.lagSmoothing(0);
-
-// Scene setup
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(BRAND.bgColor);
-scene.fog = new THREE.Fog(BRAND.bgColor, 8, 20);
-
-const camera = new THREE.PerspectiveCamera(32, window.innerWidth/window.innerHeight, 0.1, 100);
-camera.position.set(0, 0.3, 7);
-
-const renderer = new THREE.WebGLRenderer({ 
-  canvas: document.getElementById('c'), 
-  antialias: true, 
-  alpha: true,
-  powerPreference: "high-performance"
-});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.5));
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
-// Studio lighting - luxury product setup
-const keyLight = new THREE.DirectionalLight(0xfff4e6, 4);
-keyLight.position.set(4, 6, 8);
-keyLight.castShadow = true;
-keyLight.shadow.mapSize.width = 2048;
-keyLight.shadow.mapSize.height = 2048;
-scene.add(keyLight);
-
-const fillLight = new THREE.DirectionalLight(0xffffff, 2);
-fillLight.position.set(-4, 3, 6);
-scene.add(fillLight);
-
-const rimLight = new THREE.DirectionalLight(BRAND.goldColor, 3);
-rimLight.position.set(0, -4, -8);
-scene.add(rimLight);
-
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-scene.add(ambientLight);
-
-// Materials
-const woodMat = new THREE.MeshStandardMaterial({ 
-  color: BRAND.woodColor, 
-  roughness: 0.25,
-  metalness: 0.05,
-  normalScale: new THREE.Vector2(0.4, 0.4)
-});
-const graphiteMat = new THREE.MeshStandardMaterial({ 
-  color: 0x080808, 
-  roughness: 0.15,
-  metalness: 0.9
-});
-const goldMat = new THREE.MeshStandardMaterial({ 
-  color: BRAND.goldColor, 
-  metalness: 1.0, 
-  roughness: 0.12,
-  envMapIntensity: 1.5
-});
-const eraserMat = new THREE.MeshStandardMaterial({ 
-  color: BRAND.eraserColor, 
-  roughness: 0.65,
-  metalness: 0
-});
-
-// Pencil group
-const pencil = new THREE.Group();
-pencil.castShadow = true;
-
-// Body - hexagonal for premium feel
-const bodyGeo = new THREE.CylinderGeometry(0.23, 0.23, 4.2, 6, 1, false);
-const bodyMesh = new THREE.Mesh(bodyGeo, woodMat);
-bodyMesh.castShadow = true;
-pencil.add(bodyMesh);
-
-// Sharpened tip
-const tipGeo = new THREE.ConeGeometry(0.23, 0.6, 32);
-const tipMesh = new THREE.Mesh(tipGeo, graphiteMat);
-tipMesh.position.y = 2.4
+    <script src="script.js"></script>
+</body>
+</html>
